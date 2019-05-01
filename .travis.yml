@@ -2,7 +2,7 @@ dist: xenial
 cache: ccache
 env:
   global:
-    - MAKEFLAGS="-j 2"
+  - MAKEFLAGS="-j 2"
 before_install:
 - sudo apt-get update
 - sudo apt-get install gcc-arm-linux-gnueabihf liblz4-tool u-boot-tools -y
@@ -11,18 +11,15 @@ script:
 - cd am335x-linux-4.4
 - make uc8100me_defconfig
 - make
-- mkdir -p ~/release/modules && make INSTALL_MOD_STRIP=1 modules_install INSTALL_MOD_PATH=~/modules
-# - make am335x-moxa-uc-8100me.dtb
+- mkdir -p ~/release/modules && make INSTALL_MOD_STRIP=1 modules_install INSTALL_MOD_PATH=~/release/modules
 - make uImage
 - cp arch/arm/boot/uImage ~/release
-# - cp arch/arm/boot/am335x-moxa-uc-8100me.dtb ~/release
 - tar czvf ~/release.tar.gz ~/release
-
 deploy:
-  skip_cleanup: true
   provider: releases
   api_key:
-    secure: dvwjQLhr3qeiDZ6cE2VpCB2x1YX+yl51K6noE+qovGZ1tDI6m/e4ZJxajJqoVw8wBdSO0REfgCjkvSz1mUP4L8V44yjV0sAE14vixtK8DKIb+cihbxm9xOR7XeLd/4hgCg/Njo5gXqArS5ouacvEaWQvQlfDDVcWeoGAtwT/XPPatPGHM0S1WnTrOIE3Lpv56VeihN2ockN2Ik1k4VUr9YnNaXH68njAuSzdqBF2d/M6tz1TZJA7CykIij/2wrIkNMeeI7+k5HsRty/aJZapbapHOiFuAwi2SZOApvsCYLrHemzmCyPDF40jYh/e33AivtydFTyvJF50ZF3HFyIMxno6R4OPrJm8fSXC8ql5+ZOv9y9py+tFPzHiDv3WEZ8wI88sV12Y1GC/egbAd67tRyI3E6/uaXgrDx4Jb0vmWVCm0/QtTS9Ww9B9RvTaeiERYJccy/TECtI4XCtAJWh9lvmeUigLLOcl7n31mxF8lY4X/+bWQ2WBgPNyeBtAmYSAbm2B0IFTrbgCrPkextLhytGZsAs8lgpQGTm5zuTMBboJBBCr+Gf/R4I24M1oH/n9mxIwn7SkIqJQ/cPfv8e8yvc9Vrmbwdoth5mgYiTEVNowkhzBtSWPGtNiaBn6RvD+H1+g3y81jO9cLrgCoCVCEi+a6//SnVnEIKo5+N4SktI=
+    secure: mh4Do6IWVdAkKSnpN5RpVBOl3PmKKIYpvbxn1s8/s/HBl44VOkeyvtgVfBcYaeA0fwsmM5cCCrofK9rt8VEpf6/1+09iN3f6SlR5WKrvvzMZL1ZpATx2Tv0Ikc4NlpuGJdcDDfmMhVGL+l3OILUqw0abNORPKA58h+DbqM0wZWXt59nQfStkwQxHnYgCewK6OkXpbF4PDdTy9u7xYZKxZHwrYKxI6lHYT11JOX8z7F9R+ZJjxhDj+uY5aqq8emMYIqo2ezOpJ+gWBjzvXIv7DzgsSGSFsJOgjLZFoonyukdb8T1UTNCk4isKDGxRPkvftzcROqPhnl5F8SfXUPHxFb38pj+SXXfMRH9NiRzsL9MRbCrOigXHAnONXrEOVjvvWIFcTUJZxCcDRuNYVcqjad/E4pvl6g39wu7AP8j/XFnCmCH1YJ+evODDKPfAUZcPjQE2IxeKo0URbCexEn6WcPk3wS+xzz7ooGk7nPYQEK5ICi/o2/pGF5wMiMwAe6z8YZfmTLk33b48E/+8l9rXL+4BBWF/TCu+X0CXDy6JmFccCgWEkIRLbbJMX3X+V+g8gXvm2x/NJ6nGU8NRHYwsy3vmwcfeo1K0vK/H542lzP69eck0PhaiNOdyuO72J9ufmJsuLpNW4RJBCUeJX8el75erkshuDIP61XLNnDZdYB0=
   file: "~/release.tar.gz"
+  skip_cleanup: true
   on:
     repo: imZack/linux-kernel-builder
