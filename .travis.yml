@@ -1,14 +1,27 @@
 dist: xenial
+cache: ccache
 env:
   global:
     - MAKEFLAGS="-j 2"
 before_install:
 - sudo apt-get update
-- sudo apt-get install gcc-arm-linux-gnueabihf -y
+- sudo apt-get install gcc-arm-linux-gnueabihf liblz4-tool -y
 script:
 - git clone --branch UC-8100-ME_V3.0 --depth 1 https://github.com/Moxa-Linux/am335x-linux-4.4.git
 - cd am335x-linux-4.4
 - make uc8100me_defconfig
 - make
-- mkdir -p ~/modules && make INSTALL_MOD_STRIP=1 modules_install INSTALL_MOD_PATH=~/modules
-- make make am335x-moxa-uc-8100me.dtb
+- mkdir -p ~/release/modules && make INSTALL_MOD_STRIP=1 modules_install INSTALL_MOD_PATH=~/modules
+- make am335x-moxa-uc-8100me.dtb
+- make uImage
+- cp arch/arm/boot/uImage ~/release
+- cp arch/arm/boot/am335x-moxa-uc-8100me.dtb ~/release
+- tar czvf ~/release.tar.gz ~/release
+
+deploy:
+  provider: releases
+  api_key:
+    secure: dvwjQLhr3qeiDZ6cE2VpCB2x1YX+yl51K6noE+qovGZ1tDI6m/e4ZJxajJqoVw8wBdSO0REfgCjkvSz1mUP4L8V44yjV0sAE14vixtK8DKIb+cihbxm9xOR7XeLd/4hgCg/Njo5gXqArS5ouacvEaWQvQlfDDVcWeoGAtwT/XPPatPGHM0S1WnTrOIE3Lpv56VeihN2ockN2Ik1k4VUr9YnNaXH68njAuSzdqBF2d/M6tz1TZJA7CykIij/2wrIkNMeeI7+k5HsRty/aJZapbapHOiFuAwi2SZOApvsCYLrHemzmCyPDF40jYh/e33AivtydFTyvJF50ZF3HFyIMxno6R4OPrJm8fSXC8ql5+ZOv9y9py+tFPzHiDv3WEZ8wI88sV12Y1GC/egbAd67tRyI3E6/uaXgrDx4Jb0vmWVCm0/QtTS9Ww9B9RvTaeiERYJccy/TECtI4XCtAJWh9lvmeUigLLOcl7n31mxF8lY4X/+bWQ2WBgPNyeBtAmYSAbm2B0IFTrbgCrPkextLhytGZsAs8lgpQGTm5zuTMBboJBBCr+Gf/R4I24M1oH/n9mxIwn7SkIqJQ/cPfv8e8yvc9Vrmbwdoth5mgYiTEVNowkhzBtSWPGtNiaBn6RvD+H1+g3y81jO9cLrgCoCVCEi+a6//SnVnEIKo5+N4SktI=
+  file: "~/release.tar.gz"
+  on:
+    repo: imZack/linux-kernel-builder
