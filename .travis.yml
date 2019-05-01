@@ -2,8 +2,10 @@ dist: xenial
 env:
   global:
     - MAKEFLAGS="-j 2"
+before_install:
+- sudo apt-get update
+- sudo apt-get install gcc-arm-linux-gnueabihf -y
 script:
-- apt install gcc-arm-linux-gnueabihf -y
 - git clone --branch UC-8100-ME_V3.0 --depth 1 https://github.com/Moxa-Linux/am335x-linux-4.4.git
 - cd am335x-linux-4.4
 - make uc8100me_defconfig
