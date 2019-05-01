@@ -1,0 +1,11 @@
+dist: trusty
+env:
+  global:
+    - MAKEFLAGS="-j 2"
+script:
+- git clone --branch UC-8100-ME_V3.0 --depth 1 https://github.com/Moxa-Linux/am335x-linux-4.4.git
+- cd am335x-linux-4.4
+- make uc8100me_defconfig
+- make
+- mkdir -p ~/modules && make INSTALL_MOD_STRIP=1 modules_install INSTALL_MOD_PATH=~/modules
+- make make am335x-moxa-uc-8100me.dtb
