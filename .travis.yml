@@ -15,8 +15,8 @@ script:
 - make uImage
 - cp arch/arm/boot/uImage ~/release
 - tar czvf ~/release.tar.gz ~/release
+- ls -alh ~/
 before_deploy:
-  # Set up git user name and tag this commit
   - git config --local user.name "Travis CI"
   - git config --local user.email "ci@yulun.me"
   - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
@@ -25,7 +25,7 @@ deploy:
   provider: releases
   api_key:
     secure: mh4Do6IWVdAkKSnpN5RpVBOl3PmKKIYpvbxn1s8/s/HBl44VOkeyvtgVfBcYaeA0fwsmM5cCCrofK9rt8VEpf6/1+09iN3f6SlR5WKrvvzMZL1ZpATx2Tv0Ikc4NlpuGJdcDDfmMhVGL+l3OILUqw0abNORPKA58h+DbqM0wZWXt59nQfStkwQxHnYgCewK6OkXpbF4PDdTy9u7xYZKxZHwrYKxI6lHYT11JOX8z7F9R+ZJjxhDj+uY5aqq8emMYIqo2ezOpJ+gWBjzvXIv7DzgsSGSFsJOgjLZFoonyukdb8T1UTNCk4isKDGxRPkvftzcROqPhnl5F8SfXUPHxFb38pj+SXXfMRH9NiRzsL9MRbCrOigXHAnONXrEOVjvvWIFcTUJZxCcDRuNYVcqjad/E4pvl6g39wu7AP8j/XFnCmCH1YJ+evODDKPfAUZcPjQE2IxeKo0URbCexEn6WcPk3wS+xzz7ooGk7nPYQEK5ICi/o2/pGF5wMiMwAe6z8YZfmTLk33b48E/+8l9rXL+4BBWF/TCu+X0CXDy6JmFccCgWEkIRLbbJMX3X+V+g8gXvm2x/NJ6nGU8NRHYwsy3vmwcfeo1K0vK/H542lzP69eck0PhaiNOdyuO72J9ufmJsuLpNW4RJBCUeJX8el75erkshuDIP61XLNnDZdYB0=
-  file: "~/release.tar.gz"
+  file: "/home/travis/release.tar.gz"
   skip_cleanup: true
   on:
     repo: imZack/linux-kernel-builder
